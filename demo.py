@@ -38,21 +38,25 @@ def trig_event(*args):
     tt2=type_touch()
     while(True):
         if tt1 != tt2:
-            if (tt1 == "upper left"):
+            if (tt2 == "upper left"):
                 return 1
-            if (tt1 == "upper right"):
+            elif (tt2 == "upper right"):
                 return 2
-            if (tt1 == "lower left"):
+            elif (tt2 == "lower left"):
                 return 3
-            if (tt1 == "lower right"):
+            elif (tt2 == "lower right"):
                 return 4
+            else:
+                tt2=tt1
+                tt1=type_touch()
         else:
             tt2=tt1
             tt1=type_touch()
 
 for i in range(100):
-	print(type_touch())
-	sleep(0.1)
+	print(trig_event())
+	print("next")
+
 
 """
 

@@ -16,12 +16,18 @@ def runcmd(cmd):
 
 cmd="cat /proc/bus/input/devices | awk '/[Tt]ouch[Pp]ad/{for(a=0;a<=3;a++){getline;{{ print $NF;}}}}' | tail -1"
 (ret, out, err) = runcmd(cmd)
-device='/dev/input/'+out
+device='/dev/input/'+out.strip()
 dev = InputDevice(device)
-x_min=1600
-y_min=1600
-x_max=5100
-y_max=4300
+cmd="evemu-describe " + device + " | awk '/ABS_X/{for(a=0;a<=2;a++){getline;{{ print $NF;}}}}'"
+(ret, out, err) = runcmd(cmd)
+offset=200
+x_min=int(out.split()[1])+offset
+x_max=int(out.split()[2])-offset
+cmd="evemu-describe " + device + " | awk '/ABS_Y/{for(a=0;a<=2;a++){getline;{{ print $NF;}}}}'"
+(ret, out, err) = runcmd(cmd)
+y_min=int(out.split()[1])+offset
+y_max=int(out.split()[2])-offset
+
 
 def scan_touch(*args):
 	x_cord=y_cord=0

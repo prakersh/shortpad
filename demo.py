@@ -8,7 +8,7 @@ x_min=1600
 y_min=1600
 x_max=5100
 y_max=4300
-	
+
 def scan_touch(*args):
 	x_cord=y_cord=0
 	for event in dev.read_loop():
@@ -33,6 +33,22 @@ def type_touch(*args):
 	else:
 		return("somewhere middle")
 
+def trig_event(*args):
+    tt1=type_touch()
+    tt2=type_touch()
+    while(True):
+        if tt1 != tt2:
+            if (tt1 == "upper left"):
+                return 1
+            if (tt1 == "upper right"):
+                return 2
+            if (tt1 == "lower left"):
+                return 3
+            if (tt1 == "lower right"):
+                return 4
+        else:
+            tt2=tt1
+            tt1=type_touch()
 
 for i in range(100):
 	print(type_touch())
@@ -43,6 +59,6 @@ for i in range(100):
 for event in dev.read_loop():
 	out = (type_touch(event))
 	if out != None:
-		print(out) 
+		print(out)
 
-"""		
+"""

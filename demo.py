@@ -77,11 +77,11 @@ def call_cmd(num):
     elif (num == 4):
         cmd='ls /home/prakersh/'
     (ret,out,err)=runcmd(cmd)
-    return (ret, out, err)
+    print(cmd)
+    return (out)
 
 for i in range(100):
 	print(call_cmd(trig_event()))
-	print("next")
 
 
 """

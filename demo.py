@@ -55,7 +55,6 @@ def trig_event(*args):
 
 for i in range(100):
 	print(trig_event())
-	print("next")
 
 
 """

@@ -1,5 +1,7 @@
 from evdev import InputDevice, categorize, ecodes
 from time import sleep
+import subprocess
+import os
 import evdev
 
 
@@ -8,6 +10,16 @@ x_min=1600
 y_min=1600
 x_max=5100
 y_max=4300
+
+def runcmd(cmd):
+    out = subprocess.Popen(cmd,
+            shell = True,
+            stdout = subprocess.PIPE,
+            stderr = subprocess.PIPE,
+            close_fds=True)
+    (stdout,stderr) = out.communicate()
+    ret =  (out.returncode)
+    return (ret, stdout ,stderr)
 
 def scan_touch(*args):
 	x_cord=y_cord=0
@@ -20,6 +32,7 @@ def scan_touch(*args):
 		if (x_cord != 0 and y_cord != 0):
 			break
 	return (x_cord, y_cord, ts)
+
 def type_touch(*args):
 	(x_cord, y_cord, ts) = scan_touch()
 	if (x_cord < x_min) and (y_cord < y_min):
@@ -52,9 +65,20 @@ def trig_event(*args):
         else:
             tt2=tt1
             tt1=type_touch()
+def call_cmd(num):
+    if (num == 1):
+        cmd='ls /tmp'
+    elif (num == 2):
+        cmd='ls /var'
+    elif (num == 3):
+        cmd='ls ~/'
+    elif (num == 4):
+        cmd='ls /home/prakersh/'
+    (ret,out,err)=runcmd(cmd)
+    return (ret, out, err)
 
 for i in range(100):
-	print(trig_event())
+	print(call_cmd(trig_event()))
 	print("next")
 
 

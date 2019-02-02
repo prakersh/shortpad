@@ -10,13 +10,17 @@ def runcmd(cmd):
             stdout = subprocess.PIPE,
             stderr = subprocess.PIPE,
             close_fds=True)
-    (stdout,stderr) = out.communicate()
+    (stdout, stderr) = out.communicate()
+    if 'byte' in str(type(stdout)) :
+        stdout = stdout.decode("utf-8")
+    if 'byte' in str(type(stderr)) :
+        stderr = stderr.decode("utf-8")
     ret =  (out.returncode)
     return (ret, stdout ,stderr)
 
 cmd="cat /proc/bus/input/devices | awk '/[Tt]ouch[Pp]ad/{for(a=0;a<=3;a++){getline;{{ print $NF;}}}}' | tail -1"
 (ret, out, err) = runcmd(cmd)
-device='/dev/input/'+out.strip()
+device="/dev/input/"+out.strip()
 dev = InputDevice(device)
 cmd="evemu-describe " + device + " | awk '/ABS_X/{for(a=0;a<=2;a++){getline;{{ print $NF;}}}}'"
 (ret, out, err) = runcmd(cmd)

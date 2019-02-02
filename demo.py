@@ -4,13 +4,6 @@ import subprocess
 import os
 import evdev
 
-
-dev = InputDevice('/dev/input/event5')
-x_min=1600
-y_min=1600
-x_max=5100
-y_max=4300
-
 def runcmd(cmd):
     out = subprocess.Popen(cmd,
             shell = True,
@@ -20,6 +13,15 @@ def runcmd(cmd):
     (stdout,stderr) = out.communicate()
     ret =  (out.returncode)
     return (ret, stdout ,stderr)
+
+cmd="cat /proc/bus/input/devices | awk '/[Tt]ouch[Pp]ad/{for(a=0;a<=3;a++){getline;{{ print $NF;}}}}' | tail -1"
+(ret, out, err) = runcmd(cmd)
+device='/dev/input/'+out
+dev = InputDevice(device)
+x_min=1600
+y_min=1600
+x_max=5100
+y_max=4300
 
 def scan_touch(*args):
 	x_cord=y_cord=0

@@ -1,9 +1,20 @@
 from tkinter import *
 import sys
-cmd1=""
-cmd2=""
-cmd3=""
-cmd4=""
+import demo
+import os
+(ret, out, err) = demo.runcmd("cat /var/shorttouch")
+global cmd1, cmd2, cmd3, cmd4
+if (ret == 0):
+	cmd1=out.split("\n")[0]
+	cmd2=out.split("\n")[1]
+	cmd3=out.split("\n")[2]
+	cmd4=out.split("\n")[3]
+else:
+	cmd1=""
+	cmd2=""
+	cmd3=""
+	cmd4=""
+
 
 class config_frame(object):
 	def __init__(self, masterfrommain):
@@ -14,7 +25,7 @@ class config_frame(object):
 		self.master.pack(pady = 30, padx = 30)
 
 		# Dictionary with options
-		self.command_choices = { 'Pizza','Lasagne','Fries','Fish','Potatoe', 'custom'}
+		self.command_choices = { 'ls /var/','pwd','su akash -c "firefox"','su akash -c "gnome-terminal"','libreoffice','ls ~' , 'custom'}
 
 		for i in range(4):
 			continue	
@@ -25,10 +36,10 @@ class config_frame(object):
 		self.var4 = StringVar(root)
  
 
-		self.var1.set('None') # set the default option
-		self.var2.set('None') # set the default option
-		self.var3.set('None') # set the default option
-		self.var4.set('None') # set the default option
+		self.var1.set(cmd1) # set the default option
+		self.var2.set(cmd2) # set the default option
+		self.var3.set(cmd3) # set the default option
+		self.var4.set(cmd4) # set the default option
  
 		Label(master, text="Choose upper left command").grid(row =0, column = 0)
 		popupMenu = OptionMenu(self.master, self.var1, *self.command_choices)
@@ -55,13 +66,25 @@ class config_frame(object):
 		self.button3 = Button(master, text="Stop", fg="red",command=self.stoping).grid(row=5, column=2, pady=20, padx=0 )
 
 	def applying(self):
-		global cmd1, cmd2, cmd3 , cmd4
-		print(cmd1,"\n",cmd2,"\n",cmd3,"\n",cmd4 )
+		
+		cmd = "kill -9 `ps -ef | grep python | grep  demo.py | grep -v grep | awk '{print $2}'`"
+		os.system(cmd)
+		str1="%s\n%s\n%s\n%s" % (cmd1, cmd2, cmd3, cmd4)
+		cmd= "echo '%s' > /var/shorttouch " %(str1)
+		os.system(cmd)
+		cmd = 'python demo.py &'
+		os.system(cmd)
+	
 
 	def starting(self):
-		print("working")	
+		cmd = 'python demo.py &'
+		os.system(cmd)
+
 	def stoping(self):
-		print("working again")
+		cmd = "kill -9 `ps -ef | grep python | grep  demo.py | grep -v grep | awk '{print $2}'`"
+		os.system(cmd)
+		root.destroy()
+		
 
 	def change_dropdown1(self,*args):
 		global cmd1

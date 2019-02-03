@@ -18,20 +18,6 @@ def runcmd(cmd):
     ret =  (out.returncode)
     return (ret, stdout ,stderr)
 
-cmd="cat /proc/bus/input/devices | awk '/[Tt]ouch[Pp]ad/{for(a=0;a<=3;a++){getline;{{ print $NF;}}}}' | tail -1"
-(ret, out, err) = runcmd(cmd)
-device="/dev/input/"+out.strip()
-dev = InputDevice(device)
-cmd="evemu-describe " + device + " | awk '/ABS_X/{for(a=0;a<=2;a++){getline;{{ print $NF;}}}}'"
-(ret, out, err) = runcmd(cmd)
-offset=200
-x_min=int(out.split()[1])+offset
-x_max=int(out.split()[2])-offset
-cmd="evemu-describe " + device + " | awk '/ABS_Y/{for(a=0;a<=2;a++){getline;{{ print $NF;}}}}'"
-(ret, out, err) = runcmd(cmd)
-y_min=int(out.split()[1])+offset
-y_max=int(out.split()[2])-offset
-
 
 def scan_touch(*args):
 	x_cord=y_cord=0
@@ -79,26 +65,50 @@ def trig_event(*args):
             tt1=type_touch()
 def call_cmd(num):
     if (num == 1):
-        cmd='ls /tmp'
+        cmd=cmd1
     elif (num == 2):
-        cmd='ls /var'
+        cmd=cmd2
     elif (num == 3):
-        cmd='ls ~/'
+        cmd=cmd3
     elif (num == 4):
-        cmd='ls /home/prakersh/'
-    (ret,out,err)=runcmd(cmd)
+        cmd=cmd4
     print(cmd)
+    (ret,out,err)=runcmd(cmd)
     return (out)
 
-for i in range(100):
-	print(call_cmd(trig_event()))
 
+global dev,x_min,x_max,y_min,y_max
+def main():
+	global dev,x_min,x_max,y_min,y_max
+	print("working")
+	cmd="cat /proc/bus/input/devices | awk '/[Tt]ouch[Pp]ad/{for(a=0;a<=3;a++){getline;{{ print $NF;}}}}' | tail -1"
+	(ret, out, err) = runcmd(cmd)
+	device="/dev/input/"+out.strip()
+	dev = InputDevice(device)
+	cmd="evemu-describe " + device + " | awk '/ABS_X/{for(a=0;a<=2;a++){getline;{{ print $NF;}}}}'"
+	(ret, out, err) = runcmd(cmd)
+	offset=200
+	x_min=int(out.split()[1])+offset
+	x_max=int(out.split()[2])-offset
+	cmd="evemu-describe " + device + " | awk '/ABS_Y/{for(a=0;a<=2;a++){getline;{{ print $NF;}}}}'"
+	(ret, out, err) = runcmd(cmd)
+	y_min=int(out.split()[1])+offset
+	y_max=int(out.split()[2])-offset
+	(ret, out, err) = runcmd("cat /var/shorttouch")
+	global cmd1, cmd2, cmd3, cmd4
+	if (ret == 0):
+		cmd1=out.split("\n")[0]
+		cmd2=out.split("\n")[1]
+		cmd3=out.split("\n")[2]
+		cmd4=out.split("\n")[3]
+	else:
+		cmd1=""
+		cmd2=""
+		cmd3=""
+		cmd4=""
 
-"""
+	for i in range(100):
+		print(call_cmd(trig_event()))
 
-for event in dev.read_loop():
-	out = (type_touch(event))
-	if out != None:
-		print(out)
-
-"""
+if __name__=="__main__":
+	main()

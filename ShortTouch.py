@@ -1,9 +1,9 @@
 from tkinter import *
 import sys
-cmd1 = ""
-cmd2 = ""
-cmd3 = ""
-cmd4 = ""
+cmd1=""
+cmd2=""
+cmd3=""
+cmd4=""
 
 class config_frame(object):
 	def __init__(self, masterfrommain):
@@ -56,12 +56,12 @@ class config_frame(object):
 
 	def applying(self):
 		global cmd1, cmd2, cmd3 , cmd4
-		print(cmd1, "\n",cmd2, "\n",cmd3, "\n",cmd4 )
+		print(cmd1,"\n",cmd2,"\n",cmd3,"\n",cmd4 )
 
 	def starting(self):
 		print("working")	
 	def stoping(self):
-		print(self.var4.get())
+		print("working again")
 
 	def change_dropdown1(self,*args):
 		global cmd1
@@ -71,7 +71,6 @@ class config_frame(object):
 			cmd1 = self.w1.value
 		else:
 			cmd1 = self.var1.get()
-			print(cmd1)
 
 	def change_dropdown2(self,*args):
 		global cmd2

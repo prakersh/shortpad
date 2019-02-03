@@ -1,8 +1,8 @@
 from tkinter import *
 import sys
-import demo
+import shortshadow
 import os
-(ret, out, err) = demo.runcmd("cat /var/shorttouch")
+(ret, out, err) = shortshadow.runcmd("cat /var/shorttouch")
 global cmd1, cmd2, cmd3, cmd4
 if (ret == 0):
 	cmd1=out.split("\n")[0]
@@ -25,7 +25,7 @@ class config_frame(object):
 		self.master.pack(pady = 30, padx = 30)
 
 		# Dictionary with options
-		self.command_choices = { 'ls /var/','pwd','su akash -c "firefox"','su akash -c "gnome-terminal"','libreoffice','ls ~' , 'custom'}
+		self.command_choices = { 'ls /var/','pwd','firefox','gnome-terminal','libreoffice','ls ~' , 'custom'}
 
 		for i in range(4):
 			continue	
@@ -43,46 +43,47 @@ class config_frame(object):
  
 		Label(master, text="Choose upper left command").grid(row =0, column = 0)
 		popupMenu = OptionMenu(self.master, self.var1, *self.command_choices)
-		popupMenu.grid(row = 0, column =1, sticky=E)
+		popupMenu.grid(row = 0, column =1, sticky=EW)
 		Label(master, text="Choose upper right command").grid(row = 2, column = 0)
 		popupMenu = OptionMenu(self.master, self.var2, *self.command_choices)
-		popupMenu.grid(row = 2, column =1 , sticky=E)
+		popupMenu.grid(row = 2, column =1 , sticky=EW)
 		Label(master, text="Choose a lower left command").grid(row = 3, column = 0)
 		popupMenu = OptionMenu(self.master, self.var3, *self.command_choices)
-		popupMenu.grid(row = 3, column =1, sticky=E)
+		popupMenu.grid(row = 3, column =1, sticky=EW)
 		Label(master, text="Choose a lower left command").grid(row = 4, column = 0)
 		popupMenu = OptionMenu(self.master, self.var4, *self.command_choices)
-		popupMenu.grid(row = 4, column =1, sticky=E)
+		popupMenu.grid(row = 4, column =1, sticky=EW)
 
 		# link function to change dropdown
 		self.var1.trace('w', self.change_dropdown1)
 		self.var2.trace('w', self.change_dropdown2)
 		self.var3.trace('w', self.change_dropdown3)
-
 		self.var4.trace('w', self.change_dropdown4)
 		
-		self.button1 = Button(master, text="Start", fg="red",command=self.starting).grid(row=5, column=0,pady=20, padx=0)
-		self.button2 = Button(master, text="Apply", fg="red",command=self.applying).grid(row=5, column=1, pady=20, padx=0)
-		self.button3 = Button(master, text="Stop", fg="red",command=self.stoping).grid(row=5, column=2, pady=20, padx=0 )
+		self.button1 = Button(master, text="Start", fg="white", bg="red",command=self.starting).grid(row=5, column=1,pady=20, padx=0)
+		self.button2 = Button(master, text="Apply & Restart", fg="white",bg="red",command=self.applying).grid(row=5, column=0, pady=20, padx=0)
+		self.button3 = Button(master, text="Stop", fg="white",bg= "red",command=self.stoping).grid(row=5, column=2, pady=20, padx=0 )
 
 	def applying(self):
 		
-		cmd = "kill -9 `ps -ef | grep python | grep  demo.py | grep -v grep | awk '{print $2}'`"
-		os.system(cmd)
+		cmd = "kill -9 `ps -ef | grep python | grep  shortshadow.py | grep -v grep | awk '{print $2}'`"
+		shortshadow.runcmd(cmd)
 		str1="%s\n%s\n%s\n%s" % (cmd1, cmd2, cmd3, cmd4)
 		cmd= "echo '%s' > /var/shorttouch " %(str1)
 		os.system(cmd)
-		cmd = 'python demo.py &'
+		cmd = 'python shortshadow.py &'
 		os.system(cmd)
 	
 
 	def starting(self):
-		cmd = 'python demo.py &'
+		cmd = "kill -9 `ps -ef | grep python | grep  shortshadow.py | grep -v grep | awk '{print $2}'`"
+		shortshadow.runcmd(cmd)
+		cmd = 'python shortshadow.py &'
 		os.system(cmd)
 
 	def stoping(self):
-		cmd = "kill -9 `ps -ef | grep python | grep  demo.py | grep -v grep | awk '{print $2}'`"
-		os.system(cmd)
+		cmd = "kill -9 `ps -ef | grep python | grep  shortshadow.py | grep -v grep | awk '{print $2}'`"
+		shortshadow.runcmd(cmd)
 		root.destroy()
 		
 
@@ -126,7 +127,9 @@ class config_frame(object):
 class popupWindow(object):
 	def __init__(self,master):
 		top=self.top=Toplevel(master)
-		self.l=Label(top,text="Hello World")
+		top.config(padx=20, pady=(10))
+		top.title("custom")
+		self.l=Label(top,text="Enter Custom Command", pady=10)
 		self.l.pack()
 		self.e=Entry(top)
 		self.e.pack()
@@ -139,7 +142,9 @@ class popupWindow(object):
  
 if __name__ == "__main__":
 	root = Tk()
-	root.title("Tk dropdown example")
+	root.title("ShortPad")
+	img = PhotoImage(file='index.png')
+	root.tk.call('wm', 'iconphoto', root._w, img)
 	master = Frame(root)
 	k=config_frame(master)
 	root.mainloop()

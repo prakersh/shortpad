@@ -73,6 +73,7 @@ def call_cmd(num):
     elif (num == 4):
         cmd=cmd4
     print(cmd)
+    cmd='su akash -c "%s"' %(cmd)
     (ret,out,err)=runcmd(cmd)
     return (out)
 
@@ -80,14 +81,13 @@ def call_cmd(num):
 global dev,x_min,x_max,y_min,y_max
 def main():
 	global dev,x_min,x_max,y_min,y_max
-	print("working")
 	cmd="cat /proc/bus/input/devices | awk '/[Tt]ouch[Pp]ad/{for(a=0;a<=3;a++){getline;{{ print $NF;}}}}' | tail -1"
 	(ret, out, err) = runcmd(cmd)
 	device="/dev/input/"+out.strip()
 	dev = InputDevice(device)
 	cmd="evemu-describe " + device + " | awk '/ABS_X/{for(a=0;a<=2;a++){getline;{{ print $NF;}}}}'"
 	(ret, out, err) = runcmd(cmd)
-	offset=200
+	offset=175
 	x_min=int(out.split()[1])+offset
 	x_max=int(out.split()[2])-offset
 	cmd="evemu-describe " + device + " | awk '/ABS_Y/{for(a=0;a<=2;a++){getline;{{ print $NF;}}}}'"

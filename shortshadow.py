@@ -73,9 +73,9 @@ def call_cmd(num):
     elif (num == 4):
         cmd=cmd4
     print(cmd)
-    cmd='su akash -c "%s"' %(cmd)
-    (ret,out,err)=runcmd(cmd)
-    return (out)
+    cmd='su akash -c "%s" &' %(cmd)
+    os.system(cmd)
+    return (1)
 
 
 global dev,x_min,x_max,y_min,y_max

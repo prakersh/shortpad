@@ -25,7 +25,7 @@ class config_frame(object):
 		self.master.pack(pady = 30, padx = 30)
 
 		# Dictionary with options
-		self.command_choices = { 'ls /var/','pwd','firefox','gnome-terminal','libreoffice','ls ~' , 'custom'}
+		self.command_choices = { 'gnome-calculator', 'gnome-sudoku','gnome-calender' ,'pwd','firefox','gnome-terminal','libreoffice','ls ~' , 'custom'}
 
 		for i in range(4):
 			continue	

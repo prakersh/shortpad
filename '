@@ -50,7 +50,7 @@ class config_frame(object):
 		Label(master, text="Choose a lower left command").grid(row = 3, column = 0)
 		popupMenu = OptionMenu(self.master, self.var3, *self.command_choices)
 		popupMenu.grid(row = 3, column =1, sticky=EW)
-		Label(master, text="Choose a lower right command").grid(row = 4, column = 0)
+		Label(master, text="Choose a lower left command").grid(row = 4, column = 0)
 		popupMenu = OptionMenu(self.master, self.var4, *self.command_choices)
 		popupMenu.grid(row = 4, column =1, sticky=EW)
 
@@ -142,7 +142,7 @@ class popupWindow(object):
 if __name__ == "__main__":
 	root = Tk()
 	root.title("ShortPad")
-	img = PhotoImage(file='index.png')
+	img = PhotoImage(file='images.jpeg')
 	root.tk.call('wm', 'iconphoto', root._w, img)
 	master = Frame(root)
 	k=config_frame(master)
